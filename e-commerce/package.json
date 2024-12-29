@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "build": "react-scripts build && copyfiles -f build/** ../wwwroot/react-app/",
+    "start": "react-scripts start"
+  },
+  "devDependencies": {
+    "copyfiles": "^2.4.1",
+    "web-vitals": "^4.2.4"
+  }
+}

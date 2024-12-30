@@ -1,0 +1,51 @@
+/* styles/Header.css */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #131921;
+  color: white;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ff9900;
+}
+
+.search-bar {
+  padding: 10px;
+  border-radius: 4px;
+  border: none;
+  width: 300px;
+  font-size: 16px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.nav-item {
+  color: white;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  text-decoration: none;
+  gap: 5px;
+}
+
+.nav-item:hover {
+  color: #ff9900;
+}
+
+.icon {
+  font-size: 20px;
+}
+
+.nav-item:hover .icon {
+  color: #ff9900;
+}

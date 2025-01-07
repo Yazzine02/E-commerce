@@ -5,7 +5,7 @@ using Microsoft.Data.SqlClient;
 
 namespace e_commerce.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Products")]
     [ApiController]
     public class ProductsController : ControllerBase
     {
@@ -16,7 +16,7 @@ namespace e_commerce.Controllers
         }
 
         [HttpGet]
-        [Route("GetProducts")]
+        [Route("Get")]
         public JsonResult GetProducts()
         {
             string query = "SELECT * FROM dbo.products";
@@ -38,7 +38,7 @@ namespace e_commerce.Controllers
         }
 
         [HttpGet]
-        [Route("GetProduct")]
+        [Route("Get")]
         public JsonResult GetProduct(int id)
         {
             string query = "SELECT * FROM dbo.products WHERE id = @id";
@@ -61,7 +61,7 @@ namespace e_commerce.Controllers
         }
 
         [HttpPost]
-        [Route("AddProduct")]
+        [Route("Add")]
         public JsonResult AddProduct(string name, string description, decimal price, string imageurl, int categoryId)
         {
             string query = @"
@@ -87,7 +87,7 @@ namespace e_commerce.Controllers
         }
 
         [HttpPut]
-        [Route("UpdateProduct")]
+        [Route("Update")]
         public JsonResult UpdateProduct(int id, string name, string description, decimal price, string imageurl, int categoryId)
         {
             string query = @"
@@ -119,7 +119,7 @@ namespace e_commerce.Controllers
         }
 
         [HttpDelete]
-        [Route("DeleteProduct")]
+        [Route("Delete")]
         public JsonResult DeleteProduct(int id)
         {
             string query = "DELETE FROM dbo.products WHERE id = @id";

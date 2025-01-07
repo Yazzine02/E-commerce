@@ -71,6 +71,16 @@ const LoginPage = () => {
             if (response.ok) {
                 const result = await response.text(); // Replace with token handling if implemented
                 alert('Login successful!');
+
+                // Storing token and role in localStorage
+                localStorage.setItem('token', result.token);
+                localStorage.setItem('role', result.role);
+                // redirect to appropriate pages corresponding to role
+                if (result.role === 'admin') {
+                    window.location.href = '/admin';
+                } else {
+                    window.location.href = '/';
+                }
                 console.log('Login result:', result); // You can store token here (e.g., localStorage)
             } else {
                 const error = await response.text();

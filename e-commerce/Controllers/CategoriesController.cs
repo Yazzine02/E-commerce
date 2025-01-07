@@ -15,7 +15,7 @@ namespace e_commerce.Controllers
         }
 
         [HttpGet]
-        [Route("GetCategories")]
+        [Route("Get")]
         public JsonResult GetCategories()
         {
             string query = "SELECT * FROM dbo.categories";
@@ -44,7 +44,7 @@ namespace e_commerce.Controllers
         }
 
         [HttpGet]
-        [Route("GetCategory")]
+        [Route("Get")]
         public JsonResult GetCategory(int id)
         {
             string query = "SELECT * FROM dbo.categories WHERE id = @id";
@@ -74,7 +74,7 @@ namespace e_commerce.Controllers
         }
 
         [HttpPost]
-        [Route("AddCategory")]
+        [Route("Add")]
         public JsonResult AddCategory(string name, string description, string imageUrl)
         {
             string query = "INSERT INTO dbo.categories (name, description, imageUrl) VALUES (@name, @description, @imageurl)";
@@ -103,7 +103,7 @@ namespace e_commerce.Controllers
         }
 
         [HttpPut]
-        [Route("UpdateCategory")]
+        [Route("Update")]
         public JsonResult UpdateCategory(int id, string name, string description, string imageUrl)
         {
             string query = @"
@@ -136,7 +136,7 @@ namespace e_commerce.Controllers
         }
 
         [HttpDelete]
-        [Route("DeleteCategory")]
+        [Route("Delete")]
         public JsonResult DeleteCategory(int id)
         {
             string query = "DELETE FROM dbo.categories WHERE id = @id";

@@ -1,10 +1,12 @@
 ﻿using e_commerce.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace e_commerce.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Users")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -19,8 +21,8 @@ namespace e_commerce.Controllers
         public IActionResult Register([FromBody] User user)
         {
             string query = @"
-            INSERT INTO dbo.Users (Username, Email, Role, Address, FirstName, LastName, Password) 
-            VALUES (@Username, @Email, @Role, @Address, @FirstName, @LastName, @Password)";
+                INSERT INTO dbo.Users (Username, Email, Role, Address, FirstName, LastName, Password) 
+                VALUES (@Username, @Email, @Role, @Address, @FirstName, @LastName, @Password)";
 
             string sqlDataSource = _configuration.GetConnectionString("DefaultConnection");
 
@@ -31,7 +33,6 @@ namespace e_commerce.Controllers
                     connection.Open();
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        // Check if username or email already exists
                         if (UserExists(user.Username, user.Email, connection))
                         {
                             return BadRequest("Username or Email already exists.");
@@ -42,7 +43,7 @@ namespace e_commerce.Controllers
 
                         command.Parameters.AddWithValue("@Username", user.Username);
                         command.Parameters.AddWithValue("@Email", user.Email);
-                        command.Parameters.AddWithValue("@Role", user.Role ?? "customer"); // Default role is "customer"
+                        command.Parameters.AddWithValue("@Role", user.Role ?? "customer"); // Default to "customer"
                         command.Parameters.AddWithValue("@Address", user.Address);
                         command.Parameters.AddWithValue("@FirstName", user.FirstName);
                         command.Parameters.AddWithValue("@LastName", user.LastName);
@@ -78,16 +79,60 @@ namespace e_commerce.Controllers
                         if (reader.Read())
                         {
                             string storedPassword = reader["Password"].ToString();
+                            string userRole = reader["Role"].ToString();
 
-                            // Verify the password
                             if (BCrypt.Net.BCrypt.Verify(request.Password, storedPassword))
                             {
-                                return Ok("Login successful."); // Replace with a JWT token in production
+                                // Simulate generating a token (add JWT token generation in production)
+                                string token = Guid.NewGuid().ToString(); // Replace with actual token logic
+                                return Ok(new { token, role = userRole });
                             }
                             else
                             {
                                 return Unauthorized("Invalid password.");
                             }
+                        }
+                        else
+                        {
+                            return NotFound("User not found.");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("GetUser")]
+        [Authorize(Roles = "customer, admin")]
+        public IActionResult GetUser(string username)
+        {
+            string query = "SELECT Username, Email, Role, FirstName, LastName, Address FROM dbo.Users WHERE Username = @Username";
+            string sqlDataSource = _configuration.GetConnectionString("DefaultConnection");
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(sqlDataSource))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Username", username);
+                        SqlDataReader reader = command.ExecuteReader();
+
+                        if (reader.Read())
+                        {
+                            return Ok(new
+                            {
+                                Username = reader["Username"],
+                                Email = reader["Email"],
+                                Role = reader["Role"],
+                                FirstName = reader["FirstName"],
+                                LastName = reader["LastName"],
+                                Address = reader["Address"]
+                            });
                         }
                         else
                         {
@@ -114,10 +159,10 @@ namespace e_commerce.Controllers
             }
         }
     }
-}
 
-public class LoginRequest
-{
-    public string Username { get; set; }
-    public string Password { get; set; }
+    public class LoginRequest
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
 }

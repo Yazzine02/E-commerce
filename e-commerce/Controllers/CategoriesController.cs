@@ -4,8 +4,8 @@ using Microsoft.Data.SqlClient;
 
 namespace e_commerce.Controllers
 {
-    [Route("api/Categories")]
     [ApiController]
+    [Route("api/[controller]")]
     public class CategoriesController : ControllerBase
     {
         private readonly IConfiguration _configuration;
@@ -14,8 +14,7 @@ namespace e_commerce.Controllers
             _configuration = configuration;
         }
 
-        [HttpGet]
-        [Route("Get")]
+        [HttpGet("all")]
         public JsonResult GetCategories()
         {
             string query = "SELECT * FROM dbo.categories";
@@ -43,8 +42,7 @@ namespace e_commerce.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("Get")]
+        [HttpGet("{id}")]
         public JsonResult GetCategory(int id)
         {
             string query = "SELECT * FROM dbo.categories WHERE id = @id";

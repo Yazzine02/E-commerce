@@ -6,8 +6,8 @@ using System.Data;
 
 namespace e_commerce.Controllers
 {
-    [Route("api/Users")]
     [ApiController]
+    [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
         private readonly IConfiguration _configuration;
@@ -79,13 +79,12 @@ namespace e_commerce.Controllers
                         if (reader.Read())
                         {
                             string storedPassword = reader["Password"].ToString();
-                            string userRole = reader["Role"].ToString();
+                            string role = reader["Role"].ToString();
 
+                            // Verify the password using BCrypt
                             if (BCrypt.Net.BCrypt.Verify(request.Password, storedPassword))
                             {
-                                // Simulate generating a token (add JWT token generation in production)
-                                string token = Guid.NewGuid().ToString(); // Replace with actual token logic
-                                return Ok(new { token, role = userRole });
+                                return Ok(new { username = request.Username, role = role });
                             }
                             else
                             {
@@ -94,7 +93,7 @@ namespace e_commerce.Controllers
                         }
                         else
                         {
-                            return NotFound("User not found.");
+                            return Unauthorized("Invalid credentials.");
                         }
                     }
                 }

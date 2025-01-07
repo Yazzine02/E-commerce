@@ -69,19 +69,22 @@ const LoginPage = () => {
             });
 
             if (response.ok) {
-                const result = await response.text(); // Replace with token handling if implemented
+                const result = await response.json();
+
+                // Save the username and role in localStorage
+                localStorage.setItem('username', result.username);
+                localStorage.setItem('role', result.role);
+
                 alert('Login successful!');
 
-                // Storing token and role in localStorage
-                localStorage.setItem('token', result.token);
-                localStorage.setItem('role', result.role);
-                // redirect to appropriate pages corresponding to role
+                // Redirect based on role
                 if (result.role === 'admin') {
                     window.location.href = '/admin';
+                } else if (result.role === 'customer') {
+                    window.location.href = '/cart';
                 } else {
-                    window.location.href = '/';
+                    alert('Unrecognized role. Please contact support.');
                 }
-                console.log('Login result:', result); // You can store token here (e.g., localStorage)
             } else {
                 const error = await response.text();
                 alert(`Login failed: ${error}`);
@@ -91,6 +94,7 @@ const LoginPage = () => {
             alert('Login failed. Please try again later.');
         }
     };
+
 
     return (
         <div className="container">

@@ -1,6 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
-import DynamicTable from './DynamicTable';
-import DynamicForm from './DynamicForm';
+import DynamicTable from './Dynamic/DynamicTable';
+import DynamicForm from './Dynamic/DynamicForm';
+import { useNavigate } from 'react-router-dom';
 
 const AdminPage = () => {
     const [activeSection, setActiveSection] = useState('Products');
@@ -8,6 +9,17 @@ const AdminPage = () => {
     const [columns, setColumns] = useState([]);
     const [selectedItem, setSelectedItem] = useState(null);
     const [isFormVisible, setIsFormVisible] = useState(false);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const role = localStorage.getItem('role');
+
+        if (role !== 'admin') {
+            alert('Only admins can access this page.');
+            navigate('/login');
+        }
+    }, [navigate]);
 
     useEffect(() => {
         fetchItems();

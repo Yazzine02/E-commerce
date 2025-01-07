@@ -27,7 +27,7 @@ const DealsSection = () => {
 
     const fetchCategories = async () => {
         try {
-            const response = await fetch(`${API_URL}api/Categories/GetCategories`);
+            const response = await fetch(`${API_URL}api/Categories/all`);
             const data = await response.json();
             // Transform the data to match your UI structure
             const transformedCategories = data.map(category => ({

@@ -10,7 +10,7 @@ function Header() {
     const cartCount = cartItems.length;  // Getting the count of items in the cart
   return (
       <header className="header">
-      <div className="logo">Shop dyal 7sen l3wan</div>
+      <div className="logo">Shop</div>
       <input className="search-bar" type="text" placeholder="Search product" />
       <nav className="nav-links">
         <Link to="/" className="nav-item">

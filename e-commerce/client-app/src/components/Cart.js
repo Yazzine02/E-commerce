@@ -7,18 +7,23 @@ export function Cart() {
     const [cartTotal, setCartTotal] = useState(0); // Initialize cart total to 0
     const [isAuthenticated, setIsAuthenticated] = useState(false); // Check if user is logged in
     const [userRole, setUserRole] = useState(null); // Role of the user
+
     const navigate = useNavigate();
 
     // Mock authentication check
     useEffect(() => {
-        const token = localStorage.getItem('token'); // Replace with your JWT or auth token
-        if (token) {
-            // Mock decoding token for role (use actual decoding in real apps)
-            const user = JSON.parse(atob(token.split('.')[1])); // Assumes JWT structure
-            setIsAuthenticated(true);
-            setUserRole(user.role); // Assume role is part of the token
+        const role = localStorage.getItem('role'); // Replace with your JWT or auth token
+        if (role) {
+            setUserRole(role);
+            if (role !== 'customer') {
+                alert('Only customers can access the cart.');
+                navigate('/login');
+            }
+            if (role == 'customer') {
+                setIsAuthenticated(true);
+            }
         }
-    }, []);
+    }, [navigate]);
 
     // Recalculate the total whenever cartItems change
     useEffect(() => {

@@ -5,8 +5,8 @@ using Microsoft.Data.SqlClient;
 
 namespace e_commerce.Controllers
 {
-    [Route("api/Products")]
     [ApiController]
+    [Route("api/[controller]")]
     public class ProductsController : ControllerBase
     {
         private IConfiguration _configuration;
@@ -15,8 +15,7 @@ namespace e_commerce.Controllers
             _configuration = configuration;
         }
 
-        [HttpGet]
-        [Route("Get")]
+        [HttpGet("all")]
         public JsonResult GetProducts()
         {
             string query = "SELECT * FROM dbo.products";

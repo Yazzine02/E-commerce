@@ -7,12 +7,6 @@ import { Cart } from './components/Cart.js';
 import LoginPage from './components/LoginPage';
 import AdminPage from './components/AdminPage'; // Create an admin page component
 
-// Authentication guard
-const PrivateRoute = ({ element, allowedRoles }) => {
-    const role = localStorage.getItem('role');
-    return allowedRoles.includes(role) ? element : <Navigate to="/login" />;
-};
-
 function App() {
     return (
         <CartProvider>
@@ -21,9 +15,9 @@ function App() {
                     <Header />
                     <Routes>
                         <Route path="/" element={<DealsSection />} />
-                        <Route path="/cart" element={<PrivateRoute element={<Cart />} allowedRoles={['customer']} />} />
+                        <Route path="/cart" element={<Cart />} />
                         <Route path="/login" element={<LoginPage />} />
-                        <Route path="/admin" element={<PrivateRoute element={<AdminPage />} allowedRoles={['admin']} />} />
+                        <Route path="/admin" element={<AdminPage />} />
                     </Routes>
                 </div>
             </Router>

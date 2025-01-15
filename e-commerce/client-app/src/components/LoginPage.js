@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/loginpage.css';
 
 const LoginPage = () => {
@@ -12,6 +13,8 @@ const LoginPage = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [isRegistering, setIsRegistering] = useState(false);
+
+    const navigate = useNavigate();
 
     // Handle user registration
     const handleRegister = async (e) => {
@@ -72,6 +75,7 @@ const LoginPage = () => {
                 const result = await response.json();
 
                 // Save the username and role in localStorage
+                localStorage.setItem('userId', result.userId);
                 localStorage.setItem('username', result.username);
                 localStorage.setItem('role', result.role);
 
@@ -79,9 +83,9 @@ const LoginPage = () => {
 
                 // Redirect based on role
                 if (result.role === 'admin') {
-                    window.location.href = '/admin';
+                    navigate('/admin');
                 } else if (result.role === 'customer') {
-                    window.location.href = '/cart';
+                    navigate('/cart');
                 } else {
                     alert('Unrecognized role. Please contact support.');
                 }

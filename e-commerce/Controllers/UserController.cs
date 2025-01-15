@@ -80,15 +80,23 @@ namespace e_commerce.Controllers
                         {
                             string storedPassword = reader["Password"].ToString();
                             string role = reader["Role"].ToString();
+                            int userId;
 
-                            // Verify the password using BCrypt
-                            if (BCrypt.Net.BCrypt.Verify(request.Password, storedPassword))
+                            if (int.TryParse(reader["Id"].ToString(), out userId))
                             {
-                                return Ok(new { username = request.Username, role = role });
+                                // Verify the password using BCrypt
+                                if (BCrypt.Net.BCrypt.Verify(request.Password, storedPassword))
+                                {
+                                    return Ok(new { userId = userId, username = request.Username, role = role });
+                                }
+                                else
+                                {
+                                    return Unauthorized("Invalid password.");
+                                }
                             }
                             else
                             {
-                                return Unauthorized("Invalid password.");
+                                return StatusCode(500, "Error retrieving user ID.");
                             }
                         }
                         else

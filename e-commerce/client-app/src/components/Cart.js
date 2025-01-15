@@ -35,7 +35,7 @@ export function Cart() {
     }, [cartItems]);
 
     // Handle the purchase action
-    const handlePurchase = () => {
+    const handlePurchase = async () => {
         if (!isAuthenticated) {
             alert('You must be logged in to make a purchase.');
             navigate('/login'); // Redirect to login page
@@ -46,8 +46,38 @@ export function Cart() {
             return;
         }
 
-        // Perform the purchase logic (e.g., send data to the backend)
-        alert('Purchase successful!');
+        const userId = localStorage.getItem('userId');
+
+        const orderRequest = {
+            customerId: userId, // Replace with logged-in user's ID
+            total: cartTotal,
+            products: cartItems.map((item) => ({
+                productId: item.id,
+                quantity: item.quantity,
+                price: item.price,
+            })),
+        };
+
+        try {
+            const response = await fetch('http://localhost:5273/api/Orders/CreateOrder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(orderRequest),
+            });
+
+            if (response.ok) {
+                alert('Order placed successfully!');
+            } else {
+                const error = await response.text();
+                alert(`Failed to place order: ${error}`);
+            }
+        } catch (error) {
+            console.error('Error placing order:', error);
+            alert('Error placing order. Please try again later.');
+        }
+
     };
 
     if (cartItems.length === 0) {
@@ -105,7 +135,7 @@ export function Cart() {
                             </div>
                             <button
                                 onClick={() => removeFromCart(item.id)}
-                                className="text-red-500 hover:text-red-700"
+                                className="text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded"
                             >
                                 Supprimer
                             </button>
@@ -119,7 +149,7 @@ export function Cart() {
                     <span>{cartTotal}dh</span>
                 </div>
                 <button
-                    className="w-full mt-4 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+                    className="w-full mt-4 bg-blue-600 text-white text-lg font-bold py-3 px-5 rounded hover:bg-blue-700"
                     onClick={handlePurchase}
                 >
                     Commander
